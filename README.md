@@ -32,7 +32,7 @@ Uygulamanın metin analizi yapabilmesi için ücretsiz bir Google Gemini API ana
 2. `app.py` dosyasını bir metin editörü ile açın.
 3. Dosyanın içindeki `GEMINI_API_KEY = "BURAYA_KENDI_API_KEYINIZI_YAZIN"` satırını bulun ve tırnak işaretlerini silmeden kendi anahtarınızı yapıştırın.
 
-3. Klasör Düzeni
+3. Klasör Düzeni:
 Uygulamanın sorunsuz çalışması için Flask'in aradığı dosya yapısını şu şekilde kurmanız gerekir:
 
 Senin_Proje_Klasorun/
