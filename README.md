@@ -34,7 +34,7 @@ Uygulamanın metin analizi yapabilmesi için ücretsiz bir Google Gemini API ana
 
 ### 3. Klasör Düzeni
 Uygulamanın sorunsuz çalışması için Flask'in aradığı dosya yapısını kurmanız gerekir:
-`text
+
 Senin_Proje_Klasorun/
 ├── app.py                 # Flask sunucusu ve Gemini entegrasyonu
 ├── model.h5               # Eğitilmiş Derin Öğrenme modeli
@@ -43,7 +43,6 @@ Senin_Proje_Klasorun/
 ├── thresholds.pkl         # Fiyat segmentasyonu eşik değerleri
 └── templates/             # DİKKAT: Bu klasörü elinizle açmalısınız!
     └── index.html         # Web arayüzü tasarımı bu klasörün içinde olmalı
-`
 
 ### 4. Sunucuyu Başlatın
 Terminali (veya CMD/PowerShell) projenin bulunduğu dizinde açın ve Flask sunucusunu ayağa kaldırın:
