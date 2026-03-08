@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Alışveriş Kategori Tahmini (Gemini + DL)</title>
+
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#111b2e;
+      --card2:#0f172a;
+      --text:#e6edf7;
+      --muted:#9bb0cf;
+      --line:rgba(255,255,255,.10);
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --radius:18px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, Helvetica, sans-serif;
+      background: radial-gradient(900px 500px at 20% 10%, rgba(80,120,255,.18), transparent 60%),
+                  radial-gradient(900px 500px at 80% 10%, rgba(80,255,180,.12), transparent 60%),
+                  linear-gradient(180deg, var(--bg), #070b14 70%);
+      color:var(--text);
+      min-height:100vh;
+      padding:28px 14px;
+    }
+
+    .wrap{max-width:980px;margin:0 auto}
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
+      margin-bottom:16px;
+    }
+
+    .title{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    h1{
+      margin:0;
+      font-size:22px;
+      letter-spacing:.2px;
+      line-height:1.2;
+    }
+    .sub{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
+      max-width:70ch;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      color:var(--muted);
+      font-size:13px;
+      backdrop-filter: blur(8px);
+      user-select:none;
+      white-space:nowrap;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:50%;
+      background:#22c55e;
+      box-shadow: 0 0 0 6px rgba(34,197,94,.14);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:14px;
+      margin-top:14px;
+    }
+
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+      .badge{display:none}
+    }
+
+    .card{
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .cardHeader{
+      padding:14px 16px;
+      border-bottom:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+    }
+
+    .cardHeader h2{
+      margin:0;
+      font-size:15px;
+      letter-spacing:.2px;
+      color:var(--text);
+    }
+
+    .status{
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .cardBody{padding:14px 16px}
+
+    label{
+      display:block;
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+
+    textarea{
+      width:100%;
+      min-height:140px;
+      padding:12px 12px;
+      font-size:14px;
+      line-height:1.55;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.20);
+      color: var(--text);
+      outline:none;
+      resize:vertical;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
+    }
+
+    textarea:focus{
+      border-color: rgba(110,168,255,.55);
+      box-shadow: 0 0 0 4px rgba(110,168,255,.18);
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      margin-top:12px;
+      flex-wrap:wrap;
+    }
+
+    button{
+      border:none;
+      cursor:pointer;
+      padding:10px 14px;
+      font-size:14px;
+      border-radius:14px;
+      color:#0b1220;
+      background: linear-gradient(90deg, #60a5fa, #34d399);
+      box-shadow: 0 12px 30px rgba(52,211,153,.15);
+      transition: transform .06s ease, filter .15s ease;
+    }
+    button:hover{filter:brightness(1.05)}
+    button:active{transform: translateY(1px)}
+
+    .ghost{
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border:1px solid var(--line);
+      box-shadow:none;
+    }
+
+    .hint{
+      color: var(--muted);
+      font-size:13px;
+      line-height:1.5;
+      margin: 8px 0 0 0;
+    }
+
+    .kpis{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+    }
+
+    .kpi{
+      border:1px solid var(--line);
+      border-radius: 16px;
+      padding:12px 12px;
+      background: rgba(0,0,0,.18);
+    }
+
+    .kpiTitle{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:6px;
+    }
+
+    .kpiTitle b{font-size:13px;color:var(--muted);font-weight:600}
+    .pill{
+      font-size:12px;
+      color: var(--muted);
+      border:1px solid var(--line);
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.04);
+    }
+
+    .big{
+      font-size:18px;
+      font-weight:700;
+      letter-spacing:.2px;
+      margin:0;
+    }
+
+    pre{
+      margin:10px 0 0 0;
+      white-space:pre-wrap;
+      word-break:break-word;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.22);
+      padding:10px;
+      color: var(--text);
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .footerNote{
+      margin-top:14px;
+      color: var(--muted);
+      font-size:12px;
+      text-align:center;
+      opacity:.9;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="title">
+        <h1>Gemini + Derin Öğrenme ile Kategori Tahmini</h1>
+        <p class="sub">
+          Serbest metin gir → Gemini JSON çıkarır → Model tahmin eder → Gemini sonucu açıklar.
+          (Proje demo arayüzü)
+        </p>
+      </div>
+
+      <div class="badge">
+        <span class="dot"></span>
+        <span>API & Model aktif</span>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- Sol: Girdi -->
+      <div class="card">
+        <div class="cardHeader">
+          <h2>Girdi</h2>
+          <span id="status" class="status">Hazır</span>
+        </div>
+        <div class="cardBody">
+          <form id="f">
+            <label for="text">Alışveriş senaryosu (serbest metin)</label>
+            <textarea id="text" placeholder="Örn: 25 yaşında bir kadın, Zorlu Center’da hafta sonu kredi kartıyla 3000 TL’lik alışveriş yapacak."></textarea>
+
+            <div class="actions">
+              <button type="submit">Tahmin Et</button>
+              <button class="ghost" type="button" id="demoBtn">Örnek Metin</button>
+              <button class="ghost" type="button" id="clearBtn">Temizle</button>
+            </div>
+
+            <p class="hint">
+              İpucu: Metinde yaş, cinsiyet, AVM, ödeme yöntemi, hafta içi/sonu ve yaklaşık tutar geçsin.
+            </p>
+          </form>
+        </div>
+      </div>
+
+      <!-- Sağ: Çıktı -->
+      <div class="card">
+        <div class="cardHeader">
+          <h2>Çıktı</h2>
+          <span class="pill">/predict</span>
+        </div>
+        <div class="cardBody">
+          <div class="kpis">
+            <div class="kpi">
+              <div class="kpiTitle">
+                <b>Tahmin edilen kategori</b>
+                <span class="pill" id="predPill">-</span>
+              </div>
+              <p class="big" id="pred">-</p>
+            </div>
+
+            <div class="kpi">
+              <div class="kpiTitle">
+                <b>Gemini açıklaması</b>
+                <span class="pill">doğal dil</span>
+              </div>
+              <pre id="exp">-</pre>
+            </div>
+
+            <div class="kpi">
+              <div class="kpiTitle">
+                <b>Gemini JSON</b>
+                <span class="pill">structured</span>
+              </div>
+              <pre id="json">-</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footerNote">
+      Not: Model çıktılarını doğrulamak için encoder/scaler ve eğitimdeki sınıf isimlerini kullanın.
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("f");
+    const statusEl = document.getElementById("status");
+    const predEl = document.getElementById("pred");
+    const predPill = document.getElementById("predPill");
+    const expEl  = document.getElementById("exp");
+    const jsonEl = document.getElementById("json");
+    const demoBtn = document.getElementById("demoBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const textEl = document.getElementById("text");
+
+    demoBtn.addEventListener("click", () => {
+      textEl.value = "25 yaşında bir kadın, Zorlu Center’da hafta sonu kredi kartıyla 3000 TL’lik alışveriş yapacak.";
+      textEl.focus();
+    });
+
+    clearBtn.addEventListener("click", () => {
+      textEl.value = "";
+      statusEl.textContent = "Hazır";
+      predEl.textContent = "-";
+      predPill.textContent = "-";
+      expEl.textContent = "-";
+      jsonEl.textContent = "-";
+      textEl.focus();
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      statusEl.textContent = "Çalışıyor...";
+      predEl.textContent = "-";
+      predPill.textContent = "-";
+      expEl.textContent = "-";
+      jsonEl.textContent = "-";
+
+      const text = textEl.value.trim();
+      if (!text) { statusEl.textContent = "Metin boş olamaz."; return; }
+        
+        // 🔴 Negatif para kontrolü (-3000 TL, -2000₺, -1500 lira)
+const negativeMoneyRegex = /-\s*\d+\s*(tl|₺|lira)?/i;
+
+if (negativeMoneyRegex.test(text)) {
+  statusEl.textContent = "Hata: Para miktarı negatif olamaz ❌";
+  predPill.textContent = "ERR";
+  return; // fetch'e gitmez
+}
+
+
+      try {
+        const r = await fetch("/predict", {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({ text })
+        });
+
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.error || "Bilinmeyen hata");
+
+        predEl.textContent = data.predicted_category;
+        predPill.textContent = "OK";
+        expEl.textContent  = data.explanation;
+        jsonEl.textContent = JSON.stringify(data.extracted_json, null, 2);
+        statusEl.textContent = "Tamam ✅";
+      } catch (err) {
+        predPill.textContent = "ERR";
+        statusEl.textContent = "Hata: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
