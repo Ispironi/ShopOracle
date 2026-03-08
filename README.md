@@ -1,4 +1,4 @@
-# 🛒 SepetZeka: Alışveriş Kategori Tahmini (Gemini + Deep Learning)
+# 🛒 ShopOracle alışveriş tahmini(Gemini + Deep Learning)
 
 Bu proje, kullanıcıların doğal dille yazdığı alışveriş senaryolarını analiz ederek, müşterinin hangi kategoride alışveriş yapacağını tahmin eden hibrit bir makine öğrenmesi ve yapay zeka uygulamasıdır. 
 
