@@ -36,7 +36,7 @@ Uygulamanın metin analizi yapabilmesi için ücretsiz bir Google Gemini API ana
 Uygulamanın sorunsuz çalışması için Flask'in aradığı dosya yapısını şu şekilde kurmanız gerekir:
 
 Senin_Proje_Klasorun/
-├── app.py              # Flask sunucusu ve Gemini entegrasyonu.
+├── app.py              # Flask sunucusu ve Gemini entegrasyonu./n
 ├── model.h5            # Eğitilmiş Derin Öğrenme modeli.
 ├── encoders.pkl        # Kategorik veri kodlayıcıları (Scikit-learn).
 ├── scaler.pkl          # Sayısal veri ölçekleyicileri (Scikit-learn).
