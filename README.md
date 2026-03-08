@@ -32,17 +32,18 @@ Uygulamanın metin analizi yapabilmesi için ücretsiz bir Google Gemini API ana
 2. `app.py` dosyasını bir metin editörü ile açın.
 3. Dosyanın içindeki `GEMINI_API_KEY = "BURAYA_KENDI_API_KEYINIZI_YAZIN"` satırını bulun ve tırnak işaretlerini silmeden kendi anahtarınızı yapıştırın.
 
-### 3. Klasör Düzeni
-Uygulamanın sorunsuz çalışması için Flask'in aradığı dosya yapısını kurmanız gerekir:
+3. Klasör Düzeni
+Uygulamanın sorunsuz çalışması için Flask'in aradığı dosya yapısını şu şekilde kurmanız gerekir:
 
+Plaintext
 Senin_Proje_Klasorun/
-├── app.py                 # Flask sunucusu ve Gemini entegrasyonu
-├── model.h5               # Eğitilmiş Derin Öğrenme modeli
-├── encoders.pkl           # Kategorik veri kodlayıcıları (Scikit-learn)
-├── scaler.pkl             # Sayısal veri ölçekleyicileri (Scikit-learn)
-├── thresholds.pkl         # Fiyat segmentasyonu eşik değerleri
-└── templates/             # DİKKAT: Bu klasörü elinizle açmalısınız!
-    └── index.html         # Web arayüzü tasarımı bu klasörün içinde olmalı
+├── app.py              # Flask sunucusu ve Gemini entegrasyonu
+├── model.h5            # Eğitilmiş Derin Öğrenme modeli
+├── encoders.pkl        # Kategorik veri kodlayıcıları (Scikit-learn)
+├── scaler.pkl          # Sayısal veri ölçekleyicileri (Scikit-learn)
+├── thresholds.pkl      # Fiyat segmentasyonu eşik değerleri
+└── templates/          # DİKKAT: Bu klasörü elinizle açmalısınız!
+    └── index.html      # Web arayüzü tasarımı bu klasörün içinde olmalı
 
 ### 4. Sunucuyu Başlatın
 Terminali (veya CMD/PowerShell) projenin bulunduğu dizinde açın ve Flask sunucusunu ayağa kaldırın:
