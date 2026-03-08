@@ -35,7 +35,6 @@ Uygulamanın metin analizi yapabilmesi için ücretsiz bir Google Gemini API ana
 3. Klasör Düzeni
 Uygulamanın sorunsuz çalışması için Flask'in aradığı dosya yapısını şu şekilde kurmanız gerekir:
 
-Plaintext
 Senin_Proje_Klasorun/
 ├── app.py              # Flask sunucusu ve Gemini entegrasyonu
 ├── model.h5            # Eğitilmiş Derin Öğrenme modeli
